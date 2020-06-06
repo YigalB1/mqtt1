@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 //using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using uPLibrary.Networking.M2Mqtt;
@@ -24,35 +25,53 @@ namespace mqtt1
         {
             MqttClient client = new MqttClient("192.168.1.85");
             //byte code = client.Connect(Guid.NewGuid().ToString());
+            byte code = client.Connect(new Guid().ToString(), null, null, true, 10);
+            ushort msgId = client.Publish("test", Encoding.UTF8.GetBytes("vvv2"), MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, false);
 
+            /*
             byte code = client.Connect(Guid.NewGuid().ToString(), null, null,
                 false, // will retain flag
                 MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, // will QoS
                 true, // will flag
                 "/test", // will topic
                 "will_message", // will message
-                true,60);
+                true,60); 
+                */
 
             Console.WriteLine("Code is: " + code.ToString());
             Console.WriteLine("Guid is: " + Guid.NewGuid().ToString());
-            ushort msgId = client.Publish("/test", // topic
+            
+            /*
+            ushort msgId = client.Publish("test", // topic
                               Encoding.UTF8.GetBytes("MyMessageBody"), // message body
                               MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, // QoS level
                               false); // retained
+            */
+
             Console.WriteLine("msgId is: " + msgId.ToString());
+            Thread.Sleep(1000);
+
+            client.Disconnect();
+            client = null;
 
         }
 
         private void MQtt_button2_Click(object sender, EventArgs e)
         {
+            /*
             string MQTT_BROKER_ADDRESS = "192.168.1.85";
-           // MqttClient client = new MqttClient(IPAddress.Parse(MQTT_BROKER_ADDRESS));
+            MqttClient client = new MqttClient(IPAddress.Parse(MQTT_BROKER_ADDRESS));
 
-            //string clientId = Guid.NewGuid().ToString();
-            //client.Connect(clientId);
+           string clientId = Guid.NewGuid().ToString();
+           client.Connect(clientId);
 
             //string strValue = Convert.ToString(value);
+            */
+        }
 
+        private void exit_button_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
